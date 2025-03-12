@@ -2,6 +2,13 @@ import tkinter as tk
 import random
 import threading
 import time
+import sys
+import os
+
+# 添加隐藏控制台窗口的代码
+if sys.executable.endswith('pythonw.exe'):
+    sys.stdout = open(os.devnull, 'w')
+    sys.stderr = open(os.devnull, 'w')
 
 class RollCallApp:
     def __init__(self):
