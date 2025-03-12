@@ -17,7 +17,7 @@
 ### 安装运行
 ```bash
 # 克隆仓库
-git clone https://github.com/yourusername/rollcall-tool.git
+git clone https://github.com/lemon63/Simple-rollcall.git
 
 # 进入目录
 cd rollcall-tool
@@ -30,7 +30,7 @@ python main.py
 ```
 
 ## 使用演示
-![程序界面截图](screenshot.png)
+![程序界面截图](https://console.pitimg.com/lagny/2025/03/12/67d18c2808d36.png)
 
 ## 项目结构
 ```
@@ -57,4 +57,6 @@ python main.py
 ⚠️ 每次运行前请检查名单内容  
 ⚠️ 点击按钮后请等待动画完成
 
-（建议在此处添加程序界面截图）
+## 已测试平台
+- Windows 11专业版 版本号：22H2
+- Windows 11专业版 版本号：23H2
