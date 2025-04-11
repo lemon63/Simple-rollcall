@@ -7,14 +7,23 @@ import os
 
 # 隐藏控制台窗口的代码
 if sys.executable.endswith('pythonw.exe'):
-    sys.stdout = open(os.devnull, 'w')
-    sys.stderr = open(os.devnull, 'w')
+    sys.stdout = sys.__stdout__ = open(os.devnull, 'w')
+    sys.stderr = sys.__stderr__ = open(os.devnull, 'w')
 
 class RollCallApp:
     def __init__(self):
         self.window = tk.Tk()
-        self.window.title('简单点名SRC')
+        self.window.title('简单点名SRC v1.4')
         self.window.geometry('300x270')
+        
+        # 添加版权标签
+        self.copyright_label = tk.Label(self.window, 
+                                      text="© 2025 Simple-rollcall - All Rights Reserved",
+                                      font=('微软雅黑', 8), 
+                                      fg='gray',
+                                      cursor="hand2")
+        self.copyright_label.pack(side=tk.TOP, pady=5)
+        self.copyright_label.bind("<Button-1>", self.show_copyright_info)
         
         self.names = []
         self.running = False
@@ -67,7 +76,8 @@ class RollCallApp:
         except Exception as e:
             messagebox.showerror('导入失败', f'文件读取失败：{str(e)}')
             self.names = []
-
+        self.selected_names = []  # 新增：用于记录已点过的名字
+        
     def start_rollcall(self):
         try:
             select_num = int(self.num_spin.get())
@@ -88,14 +98,14 @@ class RollCallApp:
             
         self.running = True
         self.btn.config(state=tk.DISABLED)
-        
+        self.selected_names = []  # 重置已点名单
         threading.Thread(target=self.rollcall_animation, args=(select_num,)).start()
 
     def rollcall_animation(self, select_num=1):
         end_time = time.time() + 5
-        candidates = self.names.copy()
+        candidates = [name for name in self.names if name not in self.selected_names]  # 过滤已点名字
         
-        while time.time() < end_time and self.running:
+        while time.time() < end_time and self.running and candidates:  # 添加candidates检查
             self.name_label.config(text=random.choice(candidates))
             self.window.update()
             time.sleep(0.1)
@@ -106,7 +116,8 @@ class RollCallApp:
             pick = random.choice(candidates)
             selected.append(pick)
             candidates.remove(pick)
-        
+            self.selected_names.append(pick)  # 记录已点名字
+            
         # 结果显示逻辑
         if select_num == 1:
             self.name_label.config(text=selected[0], font=('微软雅黑', 24, 'bold'))
@@ -146,6 +157,18 @@ class RollCallApp:
             
         self.btn.config(state=tk.NORMAL)
         self.running = False
+
+    def show_copyright_info(self, event):
+        """版权信息"""
+        from tkinter import messagebox
+        info = """简单点名SRC v1.4
+        
+开发者: 向南996
+联系方式: 3462134162@qq.com
+发布日期: 2025-4-12
+        
+本软件遵循GPL-3.0协议"""
+        messagebox.showinfo("关于本软件", info)
 
 if __name__ == '__main__':
     app = RollCallApp()
